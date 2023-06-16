@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AreaDeJuego from './AreaDeJuego';
+import MultiplayerAreaDeJuego from './MultiplayerAreaDeJuego';
+import MenuPrincipal from './MenuPrincipal';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AreaDeJuego />
+    <MenuPrincipal />
   </React.StrictMode>
 );
 
