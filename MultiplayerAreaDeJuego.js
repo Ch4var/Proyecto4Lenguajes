@@ -133,29 +133,31 @@ function MultiplayerAreaDeJuego() {
 
   function renderAvailableGames() {
     return (
-      <div>
+      <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
         <h2>Partidas disponibles:</h2>
         {availableGames.map(({ gameId, minutos, tema }) => (
           <div key={gameId}>
             <div>ID de partida: {gameId}</div>
             <div>Minutos: {minutos}</div>
             <div>Tema: {tema}</div>
-            <button onClick={() => handleJoinGame(gameId)}>Unirse a la partida</button>
+            <button className="btn btn-primary" onClick={() => handleJoinGame(gameId)}>
+              Unirse a la partida
+            </button>
           </div>
         ))}
       </div>
-    );
+    );    
   }
 
   function renderPlayers() {
     return (
-      <div>
+      <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
         <h3>Jugadores:</h3>
         {players.map((player) => (
           <div key={player}>{player}</div>
         ))}
       </div>
-    );
+    );    
   }
 
   function renderGameBoard() {
@@ -166,7 +168,7 @@ function MultiplayerAreaDeJuego() {
     const { board } = gameState;
 
     return (
-      <div>
+      <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
         {board.map((row, i) => (
           <div key={i}>
             {row.map((cell, j) => (
@@ -174,6 +176,7 @@ function MultiplayerAreaDeJuego() {
                 key={`${i},${j}`}
                 onClick={() => handleCellClick(i, j)}
                 disabled={lockedCells.some(([i2, j2]) => i === i2 && j === j2)}
+                className="btn btn-primary"
               >
                 {cell}
               </button>
@@ -181,7 +184,7 @@ function MultiplayerAreaDeJuego() {
           </div>
         ))}
       </div>
-    );
+    );    
   }
 
   function renderScores() {
@@ -192,7 +195,7 @@ function MultiplayerAreaDeJuego() {
     const { scores } = gameState;
 
     return (
-      <div>
+      <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
         {Object.entries(scores).map(([username, score]) => (
           <div key={username}>
             {username}: {score}
@@ -204,7 +207,7 @@ function MultiplayerAreaDeJuego() {
 
   function renderWaitingForPlayers() {
     return (
-      <div>
+      <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
         <h2>Esperando a que los jugadores se unan...</h2>
         <div>{renderPlayers()}</div>
         <button onClick={handleStartGame}>Iniciar partida</button>
@@ -214,7 +217,7 @@ function MultiplayerAreaDeJuego() {
 
   function renderWaitingForHost() {
     return (
-      <div>
+      <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
         <h2>Esperando a que el anfitrión inicie la partida...</h2>
         <div>{renderPlayers()}</div>
       </div>
@@ -224,7 +227,7 @@ function MultiplayerAreaDeJuego() {
   function renderGameUI() {
     if (gameState) {
       return (
-        <div>
+        <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
           <div>Game ID: {gameId}</div>
           <div>Username: {username}</div>
           <div>{renderPlayers()}</div>
@@ -243,37 +246,47 @@ function MultiplayerAreaDeJuego() {
   }
 
   return (
-    <div>
+    <div className="justify-content-center align-items-center" style={{ minHeight: '100vh' , backgroundColor: '#6E8DC0' }}>
+    <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
       {gameId ? (
         renderGameUI()
       ) : (
         <>
           <h1>Menú principal</h1>
           <h2>Crear nueva partida:</h2>
-          <label>Nombre:
-            <input type="text" value={username} onChange={handleUsernameChange} />
-          </label><br />
-          <label>Minutos:
+          <div className="form-group">
+            <label>Nombre:</label>
+            <input type="text" className="form-control" value={username} onChange={handleUsernameChange} />
+          </div>
+          <div className="form-group">
+            <label>Minutos:</label>
             <input
               type="number"
+              className="form-control"
               value={minutos}
               onChange={(e) => setMinutos(Number(e.target.value))}
             />
-          </label><br />
-          <label>Tema:
-            <select value={tema} onChange={(e) => setTema(e.target.value)}>
+          </div>
+          <div className="form-group">
+            <label>Tema:</label>
+            <select className="form-control" value={tema} onChange={(e) => setTema(e.target.value)}>
               {temas.map((tema) => (
                 <option key={tema} value={tema}>
                   {tema}
-                </option>))}
-            </select></label><br />
-          <button onClick={handleCreateGame}>Crear partida</button>
-
+                </option>
+              ))}
+            </select>
+          </div>
+          <button className="btn btn-primary" onClick={handleCreateGame}>
+            Crear partida
+          </button>
+  
           {renderAvailableGames()}
         </>
       )}
     </div>
-  );
+    </div>
+  );  
 }
 
 export default MultiplayerAreaDeJuego;

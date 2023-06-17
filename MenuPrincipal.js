@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AreaDeJuego from './AreaDeJuego';
 import MultiplayerAreaDeJuego from './MultiplayerAreaDeJuego';
+import './bootstrap.css';
 
 function JuegoPrincipal() {
   const [modoDeJuego, setModoDeJuego] = useState(null);
@@ -19,9 +20,9 @@ function JuegoPrincipal() {
     return <MultiplayerAreaDeJuego />;
   } else {
     return (
-      <div>
-        <button onClick={handleSoloClick}>Jugar en solitario</button>
-        <button onClick={handleMultiplayerClick}>Jugar en multijugador</button>
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' , backgroundColor: '#6E8DC0' }}>
+        <button className="btn btn-dark" onClick={handleSoloClick}>Jugar en solitario</button>
+        <button className="btn btn-dark" onClick={handleMultiplayerClick}>Jugar en multijugador</button>
       </div>
     );
   }
