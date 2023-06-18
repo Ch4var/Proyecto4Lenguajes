@@ -2,13 +2,26 @@ import React, { useState, useEffect } from 'react';
 import './bootstrap.css';
 import './estilos.css';
 
+/*
+Arreglos para almacenar los colores y los temas
+*/
 const colores = ['azul', 'naranja', 'rojo', 'verde', 'amarillo', 'morado'];
 const temas = ['estandar', 'caramelo', 'selva'];
 
+/*
+Funcion cuyo objetivo es generar un color aleatorio para poner dentro de la matriz.
+No tiene entradas.
+Retorna un elemento aleatorio del arreglo de colores.
+*/
 function generarColorAleatorio() {
   return colores[Math.floor(Math.random() * colores.length)];
 }
 
+/*
+Funcion cuyo objetivo verificar si 2 celdas son adyacentes.
+Tiene como entradas la posicion de la primera celda y la posicion de la segunda celda.
+Retorna true si las celdas son adyacentes y false si no lo son.
+*/
 function esAdyacente([i1, j1], [i2, j2]) {
   return (
     (i1 === i2 && Math.abs(j1 - j2) === 1) ||
@@ -17,10 +30,20 @@ function esAdyacente([i1, j1], [i2, j2]) {
   );
 }
 
+/*
+Funcion cuyo objetivo es extraer las imagenes correspondientes para el color y tema seleccionados.
+Tiene como entradas el color de la ficha y la tematica.
+Retorna un string con la ruta a la imagen con el color y tematica que se recibieron como entradas.
+*/
 function obtenerImagen(color, tema) {
   return `/imagenes/${tema}_${color}.png`;
 }
 
+/*
+Funcion principal del componente AreaDeJuego
+No tiene entradas.
+Retorna un elemento JSX que muestra la interfaz de juego en solitario.
+*/
 function AreaDeJuego() {
   const [matriz, setMatriz] = useState(
     Array.from({ length: 9 }, () =>
@@ -39,6 +62,9 @@ function AreaDeJuego() {
   const [mostrarHistorial, setMostrarHistorial] = useState(false);
   const [celdaPop, setCeldaPop] = useState(null);
 
+/*
+Hook de React cuyo objetivo es manejar el tiempo restante y actualizar el historial
+*/
   useEffect(() => {
     if (partidaIniciada && tiempoRestante > 0) {
       const id = setInterval(() => {
@@ -54,6 +80,14 @@ function AreaDeJuego() {
     }
   }, [partidaIniciada, tiempoRestante]);
 
+/*
+Funcion cuyo objetivo manejar lo que pasa al hacer clic sobre una celda.
+Tiene como entradas la fila y la columna de la celda seleccionada.
+Si no hay fichas seleccionadas, se agrega la celda clicada a la lista de fichas seleccionadas. Si hay fichas seleccionadas
+y la celda clicada tiene el mismo color que la última ficha seleccionada y es adyacente a ella, se agrega a la lista de fichas seleccionadas.
+Si la celda clicada ya esta en la lista de fichas seleccionadas, se elimina de la lista.
+No tiene valor de retorno
+*/
   function manejarClic(i, j) {
     if (fichasSeleccionadas.length === 0) {
       setFichasSeleccionadas([[i, j]]);
@@ -72,6 +106,13 @@ function AreaDeJuego() {
     setCeldaPop([i,j]);
   }
 
+/*
+Funcion cuyo objetivo es activar la combinacion de fichas seleccionadas.
+Si hay al menos 3 fichas seleccionadas, se actualiza la matriz para reemplazar las celdas correspondientes a las fichas seleccionadas con nuevos colores aleatorios.
+Tambien se actualiza el puntaje sumando el cuadrado del numero de fichas seleccionadas al puntaje actual.
+Finalmente, se vacia la lista de fichas seleccionadas.
+No tiene entradas ni salidas
+*/
   function activarCombinacion() {
     if (fichasSeleccionadas.length >= 3) {
       setMatriz((matriz) =>
@@ -88,11 +129,26 @@ function AreaDeJuego() {
     }
   }
 
+/*
+Funcion cuyo objetivo es manejar el envio del formulario para crear una nueva partida.
+Tiene como entrada el evento de envio del formulario.
+Dentro de la funcion, se llama a e.preventDefault() para evitar que la pagina se recargue al enviar el formulario.
+Luego, se llama a la función iniciarNuevaPartida para iniciar una nueva partida.
+No tiene salidas.
+*/
   function manejarEnvio(e) {
     e.preventDefault();
     iniciarNuevaPartida();
   }
 
+/*
+Funcion cuyo objetivo crear una nueva partida.
+Se establece el estado partidaIniciada en verdadero para indicar que la partida ha iniciado.
+Tambien se reinicia el puntaje a 0 y se genera una nueva matriz de colores aleatorios.
+Se establece el tiempo restante en minutos * 60 para convertir los minutos a segundos.
+Se establece el estado partidaTerminada en falso y se vacia la lista de fichas seleccionadas.
+No tiene entradas ni salidas.
+*/
   function iniciarNuevaPartida() {
     setPartidaIniciada(true);
     setPuntaje(0);
@@ -106,6 +162,11 @@ function AreaDeJuego() {
     setFichasSeleccionadas([]);
   }
 
+/*
+Funcion cuyo objetivo es regresar al menu principal.
+No tiene entradas ni salidas.
+Establece el estado partidaIniciada en falso para indicar que la partida ha terminado y se establece el estado partidaTerminada en falso.
+*/
   function volverAlMenuPrincipal() {
     setPartidaIniciada(false);
     setPartidaTerminada(false);

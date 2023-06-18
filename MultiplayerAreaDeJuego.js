@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 
 const temas = ['estandar', 'caramelo', 'selva'];
 
+/*
+Función principal del componente MultiplayerAreaDeJuego
+No tiene entradas.
+Retorna un elemento JSX que muestra la interfaz de juego multijugador.
+*/
 function MultiplayerAreaDeJuego() {
   const [gameId, setGameId] = useState(null);
   const [gameState, setGameState] = useState(null);
@@ -13,18 +18,24 @@ function MultiplayerAreaDeJuego() {
   const [players, setPlayers] = useState([]);
   const [isHost, setIsHost] = useState(false);
 
+/*
+Hook de react que se usa para conectarse al servidor websocket y escuchar los mensajes
+*/
   useEffect(() => {
-    // Connect to WebSocket server and listen for messages
     const socket = new WebSocket('ws://localhost:8080');
     socket.addEventListener('message', handleMessage);
 
-    // Clean up WebSocket connection on unmount
     return () => {
       socket.removeEventListener('message', handleMessage);
       socket.close();
     };
   }, []);
 
+/*
+Funcion cuyo objetivo es manejar los eventos que recibe por medio del websocket
+Recibe el evento como entrada y segun el evento que recibio, hace ciertas cosas
+No tiene salidas.
+*/
   function handleMessage(event) {
     const message = JSON.parse(event.data);
 
@@ -49,14 +60,24 @@ function MultiplayerAreaDeJuego() {
         setPlayers((players) => [...players, message.username]);
         break;
       default:
-        console.warn(`Unknown message type: ${message.type}`);
+        console.warn(`Tipo de mensaje desconocido: ${message.type}`);
     }
   }
 
+/*
+Función cuyo objetivo es manejar el cambio de nombre de usuario
+Recibe el evento como entrada y actualiza el estado del nombre de usuario con el valor del evento
+No tiene salidas.
+*/
   function handleUsernameChange(event) {
     setUsername(event.target.value);
   }
 
+/*
+Función cuyo objetivo es manejar el evento de unirse a una partida
+Recibe el ID de la partida como entrada y envía un mensaje al servidor para unirse a la partida
+No tiene salidas.
+*/
   function handleJoinGame(gameId) {
     setGameId(gameId);
 
@@ -68,6 +89,12 @@ function MultiplayerAreaDeJuego() {
     sendMessage(message);
   }
 
+/*
+Función cuyo objetivo es manejar el evento de crear una partida
+No tiene entradas.
+Envía un mensaje al servidor para crear una nueva partida con los valores seleccionados por el usuario
+No tiene salidas.
+*/
   function handleCreateGame() {
     if (!username) {
       alert('Por favor ingresa tu nombre antes de crear una partida');
@@ -83,6 +110,12 @@ function MultiplayerAreaDeJuego() {
     sendMessage(message);
   }
 
+/*
+Función cuyo objetivo es manejar el evento de iniciar una partida
+No tiene entradas.
+Envía un mensaje al servidor para iniciar la partida actual
+No tiene salidas.
+*/
   function handleStartGame() {
     const message = {
       type: 'startGame',
@@ -91,6 +124,12 @@ function MultiplayerAreaDeJuego() {
     sendMessage(message);
   }
 
+/*
+Función cuyo objetivo es manejar el evento de reiniciar una partida
+No tiene entradas.
+Envía un mensaje al servidor para reiniciar la partida actual
+No tiene salidas.
+*/
   function handleRestartGame() {
     const message = {
       type: 'restartGame',
@@ -99,6 +138,12 @@ function MultiplayerAreaDeJuego() {
     sendMessage(message);
   }
 
+/*
+Función cuyo objetivo es manejar el evento de salir de una partida
+No tiene entradas.
+Envía un mensaje al servidor para salir de la partida actual
+No tiene salidas.
+*/
   function handleQuitGame() {
     const message = {
       type: 'quitGame',
@@ -108,6 +153,11 @@ function MultiplayerAreaDeJuego() {
     sendMessage(message);
   }
 
+/*
+Función cuyo objetivo es manejar el evento de hacer clic en una celda del tablero de juego
+Recibe las coordenadas de la celda como entrada y envía un mensaje al servidor para actualizar el estado del juego
+No tiene salidas.
+*/
   function handleCellClick(i, j) {
     if (lockedCells.some(([i2, j2]) => i === i2 && j === j2)) {
       return;
@@ -122,6 +172,11 @@ function MultiplayerAreaDeJuego() {
     sendMessage(message);
   }
 
+/*
+Función cuyo objetivo es enviar un mensaje al servidor websocket
+Recibe el mensaje como entrada y lo envía al servidor en formato JSON
+No tiene salidas.
+*/
   function sendMessage(message) {
     const jsonMessage = JSON.stringify(message);
     const socket = new WebSocket('ws://localhost:8080');
@@ -131,6 +186,11 @@ function MultiplayerAreaDeJuego() {
     });
   }
 
+/*
+Función cuyo objetivo es renderizar las partidas disponibles para unirse
+No tiene entradas.
+Retorna un elemento JSX que muestra las partidas disponibles y un botón para unirse a cada una.
+*/
   function renderAvailableGames() {
     return (
       <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
@@ -149,6 +209,11 @@ function MultiplayerAreaDeJuego() {
     );    
   }
 
+/*
+Función cuyo objetivo es renderizar los jugadores en la partida
+No tiene entradas.
+Retorna un elemento JSX que muestra los jugadores en la partida.
+*/
   function renderPlayers() {
     return (
       <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
@@ -160,6 +225,11 @@ function MultiplayerAreaDeJuego() {
     );    
   }
 
+/*
+Función cuyo objetivo es renderizar el tablero de juego
+No tiene entradas.
+Retorna un elemento JSX que muestra el tablero de juego con botones para cada celda.
+*/
   function renderGameBoard() {
     if (!gameState) {
       return null;
@@ -187,6 +257,11 @@ function MultiplayerAreaDeJuego() {
     );    
   }
 
+/*
+Función cuyo objetivo es renderizar los puntajes de los jugadores
+No tiene entradas.
+Retorna un elemento JSX que muestra los puntajes de los jugadores.
+*/
   function renderScores() {
     if (!gameState) {
       return null;
@@ -205,6 +280,11 @@ function MultiplayerAreaDeJuego() {
     );
   }
 
+/*
+Función cuyo objetivo es renderizar la pantalla de espera para que los jugadores se unan a la partida
+No tiene entradas.
+Retorna un elemento JSX que muestra una pantalla de espera y un botón para iniciar la partida.
+*/
   function renderWaitingForPlayers() {
     return (
       <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
@@ -215,6 +295,11 @@ function MultiplayerAreaDeJuego() {
     );
   }
 
+/*
+Función cuyo objetivo es renderizar la pantalla de espera para que el anfitrión inicie la partida
+No tiene entradas.
+Retorna un elemento JSX que muestra una pantalla de espera y una lista de jugadores en la partida.
+*/
   function renderWaitingForHost() {
     return (
       <div className="container" style={{ backgroundColor: '#6E8DC0' }}>
@@ -224,6 +309,11 @@ function MultiplayerAreaDeJuego() {
     );
   }
 
+/*
+Función cuyo objetivo es renderizar la interfaz de juego
+No tiene entradas.
+Retorna un elemento JSX que muestra la interfaz de juego con botones para iniciar, reiniciar y salir de la partida, el tablero de juego y los puntajes.
+*/
   function renderGameUI() {
     if (gameState) {
       return (

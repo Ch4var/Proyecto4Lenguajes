@@ -11,10 +11,10 @@ wss.on('connection', (ws) => {
 
     switch (data.type) {
       case 'createGame':
-        // Generate a unique game ID
+        // Generar un ID de partida único
         const gameId = Date.now().toString();
 
-        // Create a new game with the provided information
+        // Crear una nueva partida con la información proporcionada
         games[gameId] = {
           minutos: data.minutos,
           tema: data.tema,
@@ -23,13 +23,13 @@ wss.on('connection', (ws) => {
           // ...
         };
 
-        // Store a reference to the host's WebSocket connection
+        // Almacenar una referencia a la conexión WebSocket del anfitrión
         clients[data.username] = ws;
 
-        // Send the game ID back to the client that created the game
+        // Enviar el ID de la partida de vuelta al cliente que creó el juego
         ws.send(JSON.stringify({ type: 'gameId', gameId }));
 
-        // Send the new game information to all connected clients
+        // Enviar la información de la nueva partida a todos los clientes conectados
         wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ type: 'newGame', gameId, ...games[gameId] }));
@@ -37,17 +37,16 @@ wss.on('connection', (ws) => {
         });
         break;
       case 'joinGame':
-        // Add the new player to the game
+        // Agregar el nuevo jugador a la partida
         games[data.gameId].players.push(data.username);
 
-        // Store a reference to the player's WebSocket connection
+        // Almacenar una referencia a la conexión WebSocket del jugador
         clients[data.username] = ws;
 
-        // Send a message to the host with the new player's username
+        // Enviar un mensaje al anfitrión con el nombre de usuario del nuevo jugador
         const host = games[data.gameId].host;
         clients[host].send(JSON.stringify({ type: 'playerJoined', username: data.username }));
         break;
-      // ...
     }
   });
 });
